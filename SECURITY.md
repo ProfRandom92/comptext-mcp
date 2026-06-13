@@ -1,54 +1,71 @@
 # Security Policy
 
-CompText MCP is a bridge between an MCP client, a local workspace, and external command-line tools such as `ctxt` and Rust tooling.
+`comptext-mcp` is currently in Phase 0 documentation baseline status. It is not
+an implemented MCP server and does not provide active runtime capability.
 
-Security and determinism are core project goals.
+## Supported Status
 
-## Supported versions
+Phase 0 supports documentation review only. No runtime package, MCP server,
+provider integration, token passthrough, network bridge, proposal application,
+or external-agent execution is supported by this baseline.
 
-The initial supported version is:
+Pre-existing runtime and package files may exist in the repository. They are
+outside Phase 0 scope and must not be treated as release-ready behavior by this
+documentation baseline.
 
-| Version | Supported |
-| --- | --- |
-| 0.1.x | yes |
+## Security Boundaries
 
-## Report a vulnerability
+The project boundary is a future local MCP adapter around deterministic
+`ctxt --json` output.
 
-Please use GitHub private vulnerability reporting if available. If not, contact the repository owner through GitHub.
+Security rules:
 
-Include:
+- `ctxt` owns behavior, schemas, validation, and deterministic context.
+- `comptext-mcp` must not invent behavior or synthesize new facts.
+- Future MCP tools must be closed allowlist mappings to stable local
+  `ctxt --json` commands.
+- Local MCP servers and tool bridges are security boundaries.
+- Bounded reads must preserve the documented `--max-bytes 12000` limits.
+- Errors must be structured local command failures, not model judgments.
+- Runtime artifacts and proposal artifacts are untrusted evidence, not
+  workspace truth.
 
-- affected version or commit
-- operating system
-- OpenCode version if relevant
-- minimal reproduction steps
-- expected behavior
-- actual behavior
+## Explicit Non-Capabilities
 
-## Security boundaries
+Phase 0 does not:
 
-The project should not:
+- implement an MCP server
+- execute agents
+- apply proposals
+- enable provider integration
+- enable token passthrough
+- enable network access
+- allow general shell access
+- read, print, pack, or create secrets
+- install dependencies
+- create hooks or plugins
 
-- execute arbitrary shell strings
-- include secrets in context packs
-- download model weights during install
-- require local LLM services
-- run write actions by default
-- publish, upload, or push without explicit user action
+## Plugin And Subagent Boundaries
 
-## Secret handling
+`@github`, `@codex-security`, and `@openai-developers` may be used as review
+and context tools only. They do not expand Phase 0 permissions and must not be
+used to enable providers, network behavior, token passthrough, runtime code,
+server implementation, proposal application, hooks, plugins, generated
+artifacts, reports, secret handling, or git history writes.
 
-Context packing must exclude common secret and build directories, including:
+Subagents may be used only for deterministic review and planning. They may
+inspect Phase 0 docs, security boundaries, future tool mappings, and internal
+consistency, but they must not execute implementation work or broaden the
+contract.
 
-- `.env`
-- `.env.*`
-- private keys and certs
-- `.git/`
-- `target/`
-- `node_modules/`
-- `dist/`
-- `build/`
+## Secret Handling
 
-## Safe default
+Phase 0 documentation must not introduce secrets, credentials, tokens, API keys,
+or secret passthrough. Future adapter design must keep secret handling outside
+the MCP contract unless explicitly defined by a later reviewed phase.
 
-`CTXT_MCP_READ_ONLY=1` is the recommended default for OpenCode and collaborator setups.
+## Reporting Security Issues
+
+Report security issues through GitHub private vulnerability reporting if it is
+available for the repository. Include the affected documentation section,
+commit, expected boundary, and observed contradiction.

@@ -1,97 +1,80 @@
-# CompText MCP
+# comptext-mcp
 
-Pip-installable MCP bridge for OpenCode, Rust workspaces, CompText CLI, replay digests, and deterministic context packs.
+`comptext-mcp` is the planned MCP contract layer for exposing deterministic
+local `ctxt --json` results to MCP clients.
 
-This package does **not** run a local LLM and does **not** download models. It exposes safe tools that call the existing Rust CLI (`ctxt`) and Rust/Cargo commands.
+Phase 0 is documentation-only. This repository baseline does not implement an
+MCP server, package runtime, provider integration, token passthrough, proposal
+application, network access, external-agent invocation, or general shell access.
+Pre-existing runtime and package files may be present in the repository, but
+they are outside Phase 0 scope and are not treated as release-ready behavior by
+this documentation baseline.
 
-## Install
+Core principle:
 
-Windows:
+> Models are providers. Context is the product.
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install --upgrade pip
-.\.venv\Scripts\pip.exe install .
-```
+## Architecture Position
 
-Linux/macOS:
+- `ctxt` is the deterministic source of truth.
+- `ctxt` owns behavior, schemas, validation, and deterministic context.
+- `comptext-mcp` must not invent behavior.
+- `comptext-mcp` is a future adapter only.
+- Future MCP tools must map one-to-one to stable local `ctxt --json` commands.
+- Runtime artifacts and proposal artifacts are untrusted evidence, not
+  workspace truth.
 
-```bash
-python3 -m venv .venv
-.venv/bin/python -m pip install --upgrade pip
-.venv/bin/pip install .
-```
+## Phase 0 Scope
 
-## Requirements
+Phase 0 creates the documentation and contract baseline only:
 
-You need `ctxt` available either in `PATH` or through `CTXT_BIN`.
+- `PROJEKT.md`
+- `README.md`
+- `.gitignore`
+- `SECURITY.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CONTRACTS.md`
+- `docs/ROADMAP.md`
 
-Windows:
+No runtime code, package scaffolding, server implementation, generated reports,
+hooks, plugins, dependencies, provider calls, proposal application, or general
+shell access are part of Phase 0.
 
-```powershell
-$env:CTXT_BIN="C:\path\to\ctxt.exe"
-$env:CTXT_WORKDIR="C:\path\to\rust-project"
-$env:CTXT_MCP_READ_ONLY="1"
-```
+## Review Tool Policy
 
-Linux/macOS:
+`@github`, `@codex-security`, and `@openai-developers` may be used only as
+review and context tools for Phase 0 documentation. They do not grant
+permission to create runtime code, call providers, enable network behavior,
+create server implementation, add token passthrough, create hooks or plugins,
+invoke external agents, apply proposals, or write git history.
 
-```bash
-export CTXT_BIN="/usr/local/bin/ctxt"
-export CTXT_WORKDIR="/path/to/rust-project"
-export CTXT_MCP_READ_ONLY=1
-```
+Subagents, if used, are limited to deterministic review and planning over Phase
+0 docs, security boundaries, tool mappings, and consistency.
 
-## OpenCode config
+## Trusted Future Command Surface
 
-Windows example:
-
-```json
-{
-  "mcpServers": {
-    "comptext": {
-      "type": "stdio",
-      "command": "C:/path/to/comptext-mcp/.venv/Scripts/comptext-mcp.exe",
-      "env": {
-        "CTXT_WORKDIR": "C:/path/to/rust-project",
-        "CTXT_BIN": "C:/path/to/ctxt.exe",
-        "CTXT_MCP_READ_ONLY": "1",
-        "CTXT_TIMEOUT_SECS": "30"
-      }
-    }
-  }
-}
-```
-
-## Tools
-
-- `comptext_status`
-- `comptext_pack_context`
-- `comptext_rust_audit`
-- `comptext_replay_digest`
-- `comptext_contract_check`
-- `comptext_github_pack`
-- `comptext_hf_export_pack`
-
-## Safety defaults
-
-- read-only by default
-- no `shell=True`
-- no `cargo run`
-- no `cargo install`
-- no `cargo publish`
-- `cargo test` is only allowed with `--no-run`
-- excludes `.env`, keys, certs, `.git`, `target`, `node_modules`, `dist`, `build`
-
-## Build wheel
-
-```bash
-python -m pip install --upgrade build
-python -m build
-```
-
-Result:
+Future MCP tools may only wrap these stable local commands:
 
 ```text
-dist/comptext_mcp-0.1.0-py3-none-any.whl
+ctxt --json self report
+ctxt --json schema
+ctxt --json capabilities
+ctxt --json proposals list
+ctxt --json proposals inspect latest --max-bytes 12000
+ctxt --json proposals inspect --id latest --max-bytes 12000
+ctxt --json proposals validate latest
+ctxt --json proposals validate --id latest
+ctxt --json validate --run
+ctxt --json agent discover
+ctxt --json runs list
+ctxt --json runs read latest --max-bytes 12000
 ```
+
+Unsupported `ctxt` commands are not part of the Phase 0 MCP contract.
+
+## Documentation
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Contracts](docs/CONTRACTS.md)
+- [Roadmap](docs/ROADMAP.md)
+- [Security](SECURITY.md)
