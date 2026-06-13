@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest a focused improvement
+title: "feat: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. Please keep requests focused and aligned with the project goals.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem would this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should change?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - OpenCode integration
+        - Rust workspace support
+        - Context packing
+        - Replay digest
+        - Hugging Face export
+        - GitHub release tooling
+        - Documentation
+        - Tests
+        - Other
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety fit
+      options:
+        - label: This does not require a local LLM.
+        - label: This does not require model downloads.
+        - label: This keeps read-only mode safe by default.
