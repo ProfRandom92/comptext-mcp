@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "comptext": {
+      "type": "stdio",
+      "command": "/absolute/path/comptext-mcp/.venv/bin/comptext-mcp",
+      "env": {
+        "CTXT_WORKDIR": "/absolute/path/to/rust-project",
+        "CTXT_BIN": "/usr/local/bin/ctxt",
+        "CTXT_MCP_READ_ONLY": "1",
+        "CTXT_TIMEOUT_SECS": "30"
+      }
+    }
+  }
+}
