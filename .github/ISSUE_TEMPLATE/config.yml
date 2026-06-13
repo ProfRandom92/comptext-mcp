@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security issue
+    url: https://github.com/ProfRandom92/comptext-mcp/security/advisories/new
+    about: Please report security issues privately when possible.
